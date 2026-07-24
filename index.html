@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Rutinas del Gimnasio</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+  }
+  #pantalla {
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain; /* cambiar a "cover" si tus diseños ya tienen el aspect ratio exacto de la TV */
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<img id="pantalla" src="" alt="rutina">
+
+<script>
+/* ============================================================
+   1) CONFIGÁ ACÁ LOS LINKS DE DROPBOX (uno por archivo)
+   ------------------------------------------------------------
+   Pasos para conseguir cada link:
+   - Click derecho en el archivo en Dropbox > "Compartir" > "Copiar enlace"
+   - Te va a dar algo como:
+     https://www.dropbox.com/s/abc123/funcional-lunes.jpg?dl=0
+   - Cambiá el final "?dl=0" por "?raw=1"
+     Queda: https://www.dropbox.com/s/abc123/funcional-lunes.jpg?raw=1
+   - Pegá esa URL final acá abajo.
+
+   IMPORTANTE: la semana que viene, para actualizar, subí el
+   archivo nuevo a Dropbox usando "Reemplazar" (mismo nombre,
+   sobreescribiendo el anterior), NO lo borres y subas de nuevo,
+   porque ahí sí cambiaría el link y tendrías que venir a editar
+   este archivo otra vez.
+   ============================================================ */
+
+const CONFIG = {
+  "funcional-lunes.jpg":      "https://www.dropbox.com/scl/fi/bt9fhb53g2vd97wu8w5y9/funcional-lunes.jpg?rlkey=czgi8cvh4gx8mela42glayglj&raw=1",
+  "musculacion-lunes.jpg":    "https://www.dropbox.com/scl/fi/xn6tfue58nowijdyw4nin/musculacion-lunes.jpg?rlkey=l0h17unfqulj3k42s76e4wk06&raw=1",
+  "funcional-martes.jpg":     "https://www.dropbox.com/scl/fi/ev5bo1ro5a5o829fbmjah/funcional-martes.jpg?rlkey=mx4zxge7dyoydycbdafppbnsb&raw=1",
+  "musculacion-martes.jpg":   "https://www.dropbox.com/scl/fi/w1yi2s7cj2vltpz39b5sj/musculacion-martes.jpg?rlkey=vyaktc1s3o62baoxaw82kuzp2&raw=1",
+  "funcional-miercoles.jpg":  "https://www.dropbox.com/scl/fi/k9g8wrvj0qnw2chp04zth/funcional-miercoles.jpg?rlkey=6qp8wnv39mamgqy98xs8s2gnd&raw=1",
+  "musculacion-miercoles.jpg":"https://www.dropbox.com/scl/fi/adqoqigh4gap63jjnh7uv/musculacion-miercoles.jpg?rlkey=vtrar228kojez05c5xwup5s2m&raw=1",
+  "funcional-jueves.jpg":     "https://www.dropbox.com/scl/fi/gnwsqv8nfivydzz61gg9h/funcional-jueves.jpg?rlkey=pwti4li5ldcsk6a5ykab1yqps&raw=1",
+  "musculacion-jueves.jpg":   "https://www.dropbox.com/scl/fi/6wciqinex8mv1o1z1zvb9/musculacion-jueves.jpg?rlkey=1blsfp2mrfnpxig3306evzsxr&raw=1",
+  "funcional-viernes.jpg":    "https://www.dropbox.com/scl/fi/lyj13kswwmp9oxm7yel3w/funcional-viernes.jpg?rlkey=nveyoxjtx6djlo6vv767bzovg&raw=1",
+  "stretching-viernes.jpg":   "https://www.dropbox.com/scl/fi/l7t41dpns76r1ocjk07t2/stretching-viernes.jpg?rlkey=0pd7kagfwztzp2geabthk7c00&raw=1",
+  "funcional-sabado.jpg":     "https://www.dropbox.com/scl/fi/2myg68cdpgqfjlrideisv/funcional-sabado.jpg?rlkey=uv7h0nkeyfdrfjhz4zzvsppq4&raw=1",
+  "logo.jpg":                 "https://www.dropbox.com/scl/fi/3qhpf9ly3l8fctmoyay3i/logo.jpg?rlkey=hp60vtz4ogorv9k15v98f84up&raw=1"
+};
+
+/* ============================================================
+   2) HORARIOS (esto ya está armado según tu grilla, no toques)
+   dia: 0=domingo, 1=lunes, 2=martes, 3=miercoles, 4=jueves,
+        5=viernes, 6=sabado
+   inicio/fin en formato 24hs (numero)
+   ============================================================ */
+
+const EVENTOS = [
+  // Lunes
+  {dia:1, inicio:7,  fin:10, img:"funcional-lunes.jpg"},
+  {dia:1, inicio:12, fin:13, img:"musculacion-lunes.jpg"},
+  {dia:1, inicio:17, fin:18, img:"musculacion-lunes.jpg"},
+  {dia:1, inicio:18, fin:20, img:"funcional-lunes.jpg"},
+  {dia:1, inicio:20, fin:21, img:"musculacion-lunes.jpg"},
+  // Martes
+  {dia:2, inicio:7,  fin:10, img:"funcional-martes.jpg"},
+  {dia:2, inicio:12, fin:13, img:"musculacion-martes.jpg"},
+  {dia:2, inicio:17, fin:18, img:"musculacion-martes.jpg"},
+  {dia:2, inicio:18, fin:20, img:"funcional-martes.jpg"},
+  {dia:2, inicio:20, fin:21, img:"musculacion-martes.jpg"},
+  // Miercoles
+  {dia:3, inicio:7,  fin:10, img:"funcional-miercoles.jpg"},
+  {dia:3, inicio:12, fin:13, img:"musculacion-miercoles.jpg"},
+  {dia:3, inicio:17, fin:18, img:"musculacion-miercoles.jpg"},
+  {dia:3, inicio:18, fin:20, img:"funcional-miercoles.jpg"},
+  {dia:3, inicio:20, fin:21, img:"musculacion-miercoles.jpg"},
+  // Jueves
+  {dia:4, inicio:7,  fin:10, img:"funcional-jueves.jpg"},
+  {dia:4, inicio:12, fin:13, img:"musculacion-jueves.jpg"},
+  {dia:4, inicio:17, fin:18, img:"musculacion-jueves.jpg"},
+  {dia:4, inicio:18, fin:20, img:"funcional-jueves.jpg"},
+  {dia:4, inicio:20, fin:21, img:"musculacion-jueves.jpg"},
+  // Viernes
+  {dia:5, inicio:7,  fin:10, img:"funcional-viernes.jpg"},
+  {dia:5, inicio:12, fin:13, img:"stretching-viernes.jpg"},
+  {dia:5, inicio:17, fin:20, img:"funcional-viernes.jpg"},
+  // Sabado
+  {dia:6, inicio:9,  fin:11, img:"funcional-sabado.jpg"}
+];
+
+/* ============================================================
+   3) LÓGICA (no hace falta tocar nada de acá para abajo)
+   ============================================================ */
+
+let imgActualMostrada = null;
+
+function imagenCorrespondiente() {
+  const ahora = new Date();
+  const dia = ahora.getDay();
+  const horaDecimal = ahora.getHours() + ahora.getMinutes() / 60;
+
+  const evento = EVENTOS.find(e =>
+    e.dia === dia && horaDecimal >= e.inicio && horaDecimal < e.fin
+  );
+
+  return evento ? evento.img : "logo.jpg";
+}
+
+function actualizarPantalla() {
+  const nombreImg = imagenCorrespondiente();
+
+  if (nombreImg === imgActualMostrada) return; // ya está mostrando lo correcto, no parpadea
+
+  const url = CONFIG[nombreImg];
+  if (!url || url === "PEGAR_LINK_AQUI") {
+    console.warn("Falta configurar el link de: " + nombreImg);
+    return;
+  }
+
+  // cache-busting: fuerza a que se refresque una vez por día
+  const fecha = new Date().toISOString().slice(0,10);
+  document.getElementById("pantalla").src = url + "&cb=" + fecha;
+  imgActualMostrada = nombreImg;
+}
+
+actualizarPantalla();
+setInterval(actualizarPantalla, 20000); // revisa cada 20 segundos
+</script>
+
+</body>
+</html>
