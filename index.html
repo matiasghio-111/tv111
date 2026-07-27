@@ -26,36 +26,35 @@
 
 <script>
 /* ============================================================
-   1) CONFIGÁ ACÁ LOS LINKS DE DROPBOX (uno por archivo)
+   1) LAS IMÁGENES SE SIRVEN DESDE EL PROPIO GITHUB
    ------------------------------------------------------------
-   Pasos para conseguir cada link:
-   - Click derecho en el archivo en Dropbox > "Compartir" > "Copiar enlace"
-   - Te va a dar algo como:
-     https://www.dropbox.com/s/abc123/funcional-lunes.jpg?dl=0
-   - Cambiá el final "?dl=0" por "?raw=1"
-     Queda: https://www.dropbox.com/s/abc123/funcional-lunes.jpg?raw=1
-   - Pegá esa URL final acá abajo.
+   Estas rutas apuntan a la carpeta "images" dentro de este mismo
+   repositorio (matiasghio-111/tv111, rama main).
 
-   IMPORTANTE: la semana que viene, para actualizar, subí el
-   archivo nuevo a Dropbox usando "Reemplazar" (mismo nombre,
-   sobreescribiendo el anterior), NO lo borres y subas de nuevo,
-   porque ahí sí cambiaría el link y tendrías que venir a editar
-   este archivo otra vez.
+   PARA ACTUALIZAR CADA SEMANA:
+   - Entrás a la carpeta "images" en GitHub
+   - Subís los archivos nuevos con EXACTAMENTE el mismo nombre
+   - GitHub te pregunta si querés reemplazarlos -> confirmás
+   - El link NUNCA cambia (a diferencia de Dropbox), así que
+     no hace falta tocar este archivo nunca más para esto.
    ============================================================ */
 
+const REPO_BASE = "https://raw.githubusercontent.com/matiasghio-111/tv111/main/images/";
+
 const CONFIG = {
-  "funcional-lunes.jpg":      "https://www.dropbox.com/scl/fi/bt9fhb53g2vd97wu8w5y9/funcional-lunes.jpg?rlkey=czgi8cvh4gx8mela42glayglj&raw=1",
-  "musculacion-lunes.jpg":    "https://www.dropbox.com/scl/fi/xn6tfue58nowijdyw4nin/musculacion-lunes.jpg?rlkey=l0h17unfqulj3k42s76e4wk06&raw=1",
-  "funcional-martes.jpg":     "https://www.dropbox.com/scl/fi/ev5bo1ro5a5o829fbmjah/funcional-martes.jpg?rlkey=mx4zxge7dyoydycbdafppbnsb&raw=1",
-  "musculacion-martes.jpg":   "https://www.dropbox.com/scl/fi/w1yi2s7cj2vltpz39b5sj/musculacion-martes.jpg?rlkey=vyaktc1s3o62baoxaw82kuzp2&raw=1",
-  "funcional-miercoles.jpg":  "https://www.dropbox.com/scl/fi/k9g8wrvj0qnw2chp04zth/funcional-miercoles.jpg?rlkey=6qp8wnv39mamgqy98xs8s2gnd&raw=1",
-  "musculacion-miercoles.jpg":"https://www.dropbox.com/scl/fi/adqoqigh4gap63jjnh7uv/musculacion-miercoles.jpg?rlkey=vtrar228kojez05c5xwup5s2m&raw=1",
-  "funcional-jueves.jpg":     "https://www.dropbox.com/scl/fi/gnwsqv8nfivydzz61gg9h/funcional-jueves.jpg?rlkey=pwti4li5ldcsk6a5ykab1yqps&raw=1",
-  "musculacion-jueves.jpg":   "https://www.dropbox.com/scl/fi/6wciqinex8mv1o1z1zvb9/musculacion-jueves.jpg?rlkey=1blsfp2mrfnpxig3306evzsxr&raw=1",
-  "funcional-viernes.jpg":    "https://www.dropbox.com/scl/fi/lyj13kswwmp9oxm7yel3w/funcional-viernes.jpg?rlkey=nveyoxjtx6djlo6vv767bzovg&raw=1",
-  "stretching-viernes.jpg":   "https://www.dropbox.com/scl/fi/l7t41dpns76r1ocjk07t2/stretching-viernes.jpg?rlkey=0pd7kagfwztzp2geabthk7c00&raw=1",
-  "funcional-sabado.jpg":     "https://www.dropbox.com/scl/fi/2myg68cdpgqfjlrideisv/funcional-sabado.jpg?rlkey=uv7h0nkeyfdrfjhz4zzvsppq4&raw=1",
-  "logo.jpg":                 "https://www.dropbox.com/scl/fi/3qhpf9ly3l8fctmoyay3i/logo.jpg?rlkey=hp60vtz4ogorv9k15v98f84up&raw=1"
+  "funcional-lunes.jpg":       REPO_BASE + "funcional-lunes.jpg",
+  "musculacion-lunes.jpg":     REPO_BASE + "musculacion-lunes.jpg",
+  "funcional-martes.jpg":      REPO_BASE + "funcional-martes.jpg",
+  "musculacion-martes.jpg":    REPO_BASE + "musculacion-martes.jpg",
+  "funcional-miercoles.jpg":   REPO_BASE + "funcional-miercoles.jpg",
+  "musculacion-miercoles.jpg": REPO_BASE + "musculacion-miercoles.jpg",
+  "funcional-jueves.jpg":      REPO_BASE + "funcional-jueves.jpg",
+  "musculacion-jueves.jpg":    REPO_BASE + "musculacion-jueves.jpg",
+  "funcional-viernes.jpg":     REPO_BASE + "funcional-viernes.jpg",
+  "stretching-viernes.jpg":    REPO_BASE + "stretching-viernes.jpg",
+  "funcional-sabado.jpg":      REPO_BASE + "funcional-sabado.jpg",
+  "logo.jpg":                  REPO_BASE + "logo.jpg",
+  "logo-noche.jpg":            REPO_BASE + "logo-noche.jpg"
 };
 
 /* ============================================================
@@ -66,36 +65,53 @@ const CONFIG = {
    ============================================================ */
 
 const EVENTOS = [
+  // Domingo (cerrado todo el día -> logo noche)
+  {dia:0, inicio:0,  fin:24, img:"logo-noche.jpg"},
+
   // Lunes
+  {dia:1, inicio:0,  fin:7,  img:"logo-noche.jpg"},
   {dia:1, inicio:7,  fin:10, img:"funcional-lunes.jpg"},
-  {dia:1, inicio:12, fin:13, img:"musculacion-lunes.jpg"},
+  // (12:00 musculación eliminada -> queda como logo normal por defecto)
   {dia:1, inicio:17, fin:18, img:"musculacion-lunes.jpg"},
   {dia:1, inicio:18, fin:20, img:"funcional-lunes.jpg"},
   {dia:1, inicio:20, fin:21, img:"musculacion-lunes.jpg"},
+  {dia:1, inicio:22, fin:24, img:"logo-noche.jpg"},
+
   // Martes
+  {dia:2, inicio:0,  fin:7,  img:"logo-noche.jpg"},
   {dia:2, inicio:7,  fin:10, img:"funcional-martes.jpg"},
-  {dia:2, inicio:12, fin:13, img:"musculacion-martes.jpg"},
   {dia:2, inicio:17, fin:18, img:"musculacion-martes.jpg"},
   {dia:2, inicio:18, fin:20, img:"funcional-martes.jpg"},
   {dia:2, inicio:20, fin:21, img:"musculacion-martes.jpg"},
+  {dia:2, inicio:22, fin:24, img:"logo-noche.jpg"},
+
   // Miercoles
+  {dia:3, inicio:0,  fin:7,  img:"logo-noche.jpg"},
   {dia:3, inicio:7,  fin:10, img:"funcional-miercoles.jpg"},
-  {dia:3, inicio:12, fin:13, img:"musculacion-miercoles.jpg"},
   {dia:3, inicio:17, fin:18, img:"musculacion-miercoles.jpg"},
   {dia:3, inicio:18, fin:20, img:"funcional-miercoles.jpg"},
   {dia:3, inicio:20, fin:21, img:"musculacion-miercoles.jpg"},
+  {dia:3, inicio:22, fin:24, img:"logo-noche.jpg"},
+
   // Jueves
+  {dia:4, inicio:0,  fin:7,  img:"logo-noche.jpg"},
   {dia:4, inicio:7,  fin:10, img:"funcional-jueves.jpg"},
-  {dia:4, inicio:12, fin:13, img:"musculacion-jueves.jpg"},
   {dia:4, inicio:17, fin:18, img:"musculacion-jueves.jpg"},
   {dia:4, inicio:18, fin:20, img:"funcional-jueves.jpg"},
   {dia:4, inicio:20, fin:21, img:"musculacion-jueves.jpg"},
+  {dia:4, inicio:22, fin:24, img:"logo-noche.jpg"},
+
   // Viernes
+  {dia:5, inicio:0,  fin:7,  img:"logo-noche.jpg"},
   {dia:5, inicio:7,  fin:10, img:"funcional-viernes.jpg"},
   {dia:5, inicio:12, fin:13, img:"stretching-viernes.jpg"},
   {dia:5, inicio:17, fin:20, img:"funcional-viernes.jpg"},
+  {dia:5, inicio:22, fin:24, img:"logo-noche.jpg"},
+
   // Sabado
-  {dia:6, inicio:9,  fin:11, img:"funcional-sabado.jpg"}
+  {dia:6, inicio:0,  fin:7,  img:"logo-noche.jpg"},
+  {dia:6, inicio:9,  fin:11, img:"funcional-sabado.jpg"},
+  {dia:6, inicio:14, fin:24, img:"logo-noche.jpg"}
 ];
 
 /* ============================================================
@@ -129,7 +145,8 @@ function actualizarPantalla() {
 
   // cache-busting: fuerza a que se refresque una vez por día
   const fecha = new Date().toISOString().slice(0,10);
-  document.getElementById("pantalla").src = url + "&cb=" + fecha;
+  const separador = url.includes("?") ? "&" : "?";
+  document.getElementById("pantalla").src = url + separador + "cb=" + fecha;
   imgActualMostrada = nombreImg;
 }
 
