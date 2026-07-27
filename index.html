@@ -18,11 +18,64 @@
     object-fit: contain; /* cambiar a "cover" si tus diseños ya tienen el aspect ratio exacto de la TV */
     display: block;
   }
+  #panelSimulador {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 10;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  #panelSimulador select, #panelSimulador input {
+    font-size: 14px;
+    padding: 4px;
+    margin-left: 6px;
+  }
+  #panelSimulador button {
+    font-size: 14px;
+    padding: 5px 12px;
+    margin-top: 8px;
+    margin-right: 8px;
+    cursor: pointer;
+  }
+  #resultadoSimulador {
+    margin-top: 8px;
+    font-weight: bold;
+    color: #7CFC00;
+  }
 </style>
 </head>
 <body>
 
 <img id="pantalla" src="" alt="rutina">
+
+<div id="panelSimulador">
+  <div>
+    <label>Día:
+      <select id="diaSel">
+        <option value="0">Domingo</option>
+        <option value="1">Lunes</option>
+        <option value="2">Martes</option>
+        <option value="3">Miércoles</option>
+        <option value="4">Jueves</option>
+        <option value="5">Viernes</option>
+        <option value="6">Sábado</option>
+      </select>
+    </label>
+  </div>
+  <div>
+    <label>Hora: <input type="time" id="horaSel"></label>
+  </div>
+  <button id="btnProbar">Probar</button>
+  <button id="btnVolverReal">Volver a hora real</button>
+  <div id="resultadoSimulador"></div>
+</div>
 
 <script>
 /* ============================================================
@@ -120,25 +173,35 @@ const EVENTOS = [
 
 let imgActualMostrada = null;
 
-function imagenCorrespondiente() {
-  const ahora = new Date();
-  const dia = ahora.getDay();
-  const horaDecimal = ahora.getHours() + ahora.getMinutes() / 60;
+// MODO SIMULADOR: si la URL tiene ?simulador=1 aparece un panel arriba
+// a la izquierda para elegir día y hora manualmente, sin esperar a que
+// sea la hora real. Ej: https://tu-url.github.io/tv111/?simulador=1
+const params = new URLSearchParams(window.location.search);
+const simuladorActivo = params.get("simulador") === "1";
+let overrideManual = null; // {dia, horaDecimal} cuando el simulador está en uso
 
+function calcularImagen(dia, horaDecimal) {
   const evento = EVENTOS.find(e =>
     e.dia === dia && horaDecimal >= e.inicio && horaDecimal < e.fin
   );
-
   return evento ? evento.img : "logo.jpg";
 }
 
-function actualizarPantalla() {
+function imagenCorrespondiente() {
+  if (overrideManual) {
+    return calcularImagen(overrideManual.dia, overrideManual.horaDecimal);
+  }
+  const ahora = new Date();
+  return calcularImagen(ahora.getDay(), ahora.getHours() + ahora.getMinutes() / 60);
+}
+
+function actualizarPantalla(forzarRedibujo) {
   const nombreImg = imagenCorrespondiente();
 
-  if (nombreImg === imgActualMostrada) return; // ya está mostrando lo correcto, no parpadea
+  if (!forzarRedibujo && nombreImg === imgActualMostrada) return; // ya está mostrando lo correcto, no parpadea
 
   const url = CONFIG[nombreImg];
-  if (!url || url === "PEGAR_LINK_AQUI") {
+  if (!url) {
     console.warn("Falta configurar el link de: " + nombreImg);
     return;
   }
@@ -148,6 +211,32 @@ function actualizarPantalla() {
   const separador = url.includes("?") ? "&" : "?";
   document.getElementById("pantalla").src = url + separador + "cb=" + fecha;
   imgActualMostrada = nombreImg;
+
+  const etiqueta = document.getElementById("resultadoSimulador");
+  if (etiqueta) etiqueta.textContent = "Mostrando: " + nombreImg;
+}
+
+if (simuladorActivo) {
+  document.getElementById("panelSimulador").style.display = "block";
+
+  const diaSel = document.getElementById("diaSel");
+  const horaSel = document.getElementById("horaSel");
+
+  // precarga con el día/hora actual real, como punto de partida
+  const ahora = new Date();
+  diaSel.value = ahora.getDay();
+  horaSel.value = String(ahora.getHours()).padStart(2,"0") + ":" + String(ahora.getMinutes()).padStart(2,"0");
+
+  document.getElementById("btnProbar").addEventListener("click", () => {
+    const [hh, mm] = horaSel.value.split(":").map(Number);
+    overrideManual = { dia: Number(diaSel.value), horaDecimal: hh + mm/60 };
+    actualizarPantalla(true);
+  });
+
+  document.getElementById("btnVolverReal").addEventListener("click", () => {
+    overrideManual = null;
+    actualizarPantalla(true);
+  });
 }
 
 actualizarPantalla();
