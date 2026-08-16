@@ -107,7 +107,8 @@ const CONFIG = {
   "stretching-viernes.jpg":    REPO_BASE + "stretching-viernes.jpg",
   "funcional-sabado.jpg":      REPO_BASE + "funcional-sabado.jpg",
   "logo.jpg":                  REPO_BASE + "logo.jpg",
-  "logo-noche.jpg":            REPO_BASE + "logo-noche.jpg"
+  "logo-noche.jpg":            REPO_BASE + "logo-noche.jpg",
+  "vital.jpg":                 REPO_BASE + "vital.jpg"
 };
 
 /* ============================================================
@@ -121,13 +122,9 @@ const EVENTOS = [
   // Domingo (cerrado todo el día -> logo noche)
   {dia:0, inicio:0,  fin:24, img:"logo-noche.jpg"},
 
-  // Lunes
+  // Lunes (FERIADO - esquema reducido, solo válido para mañana)
   {dia:1, inicio:0,  fin:7,  img:"logo-noche.jpg"},
-  {dia:1, inicio:7,  fin:10, img:"funcional-lunes.jpg"},
-  // (12:00 musculación eliminada -> queda como logo normal por defecto)
-  {dia:1, inicio:17, fin:18, img:"musculacion-lunes.jpg"},
-  {dia:1, inicio:18, fin:20, img:"funcional-lunes.jpg"},
-  {dia:1, inicio:20, fin:21, img:"musculacion-lunes.jpg"},
+  {dia:1, inicio:9,  fin:11, img:"funcional-lunes.jpg"},
   {dia:1, inicio:22, fin:24, img:"logo-noche.jpg"},
 
   // Martes
@@ -141,6 +138,8 @@ const EVENTOS = [
   // Miercoles
   {dia:3, inicio:0,  fin:7,  img:"logo-noche.jpg"},
   {dia:3, inicio:7,  fin:10, img:"funcional-miercoles.jpg"},
+  {dia:3, inicio:10, fin:11, img:"vital.jpg"},
+  {dia:3, inicio:15, fin:16, img:"vital.jpg"},
   {dia:3, inicio:17, fin:18, img:"musculacion-miercoles.jpg"},
   {dia:3, inicio:18, fin:20, img:"funcional-miercoles.jpg"},
   {dia:3, inicio:20, fin:21, img:"musculacion-miercoles.jpg"},
@@ -157,7 +156,9 @@ const EVENTOS = [
   // Viernes
   {dia:5, inicio:0,  fin:7,  img:"logo-noche.jpg"},
   {dia:5, inicio:7,  fin:10, img:"funcional-viernes.jpg"},
+  {dia:5, inicio:10, fin:11, img:"vital.jpg"},
   {dia:5, inicio:12, fin:13, img:"stretching-viernes.jpg"},
+  {dia:5, inicio:15, fin:16, img:"vital.jpg"},
   {dia:5, inicio:17, fin:20, img:"funcional-viernes.jpg"},
   {dia:5, inicio:22, fin:24, img:"logo-noche.jpg"},
 
