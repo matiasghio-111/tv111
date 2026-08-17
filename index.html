@@ -122,9 +122,15 @@ const EVENTOS = [
   // Domingo (cerrado todo el día -> logo noche)
   {dia:0, inicio:0,  fin:24, img:"logo-noche.jpg"},
 
-  // Lunes (FERIADO - esquema reducido, solo válido para mañana)
+  // Lunes
   {dia:1, inicio:0,  fin:7,  img:"logo-noche.jpg"},
-  {dia:1, inicio:9,  fin:11, img:"funcional-lunes.jpg"},
+  {dia:1, inicio:7,  fin:10, img:"funcional-lunes.jpg"},
+  {dia:1, inicio:10, fin:11, img:"vital.jpg"},
+  // (12:00 musculación eliminada -> queda como logo normal por defecto)
+  {dia:1, inicio:15, fin:16, img:"vital.jpg"},
+  {dia:1, inicio:17, fin:18, img:"musculacion-lunes.jpg"},
+  {dia:1, inicio:18, fin:20, img:"funcional-lunes.jpg"},
+  {dia:1, inicio:20, fin:21, img:"musculacion-lunes.jpg"},
   {dia:1, inicio:22, fin:24, img:"logo-noche.jpg"},
 
   // Martes
@@ -238,6 +244,14 @@ if (simuladorActivo) {
     overrideManual = null;
     actualizarPantalla(true);
   });
+} else {
+  // Recarga la página completa cada 1 hora. Esto es clave: el chequeo de
+  // horario de arriba solo cambia la IMAGEN, pero si en algún momento se
+  // actualiza la LÓGICA de horarios (como el esquema de un feriado), el
+  // dispositivo necesita volver a cargar el archivo entero para enterarse.
+  // Sin esto, un cambio de horario podría tardar en verse hasta que
+  // alguien reinicie manualmente el Fully Kiosk.
+  setInterval(() => window.location.reload(), 60 * 60 * 1000); // cada 1 hora
 }
 
 actualizarPantalla();
